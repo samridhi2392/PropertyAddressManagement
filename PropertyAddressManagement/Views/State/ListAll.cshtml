@@ -1,0 +1,43 @@
+﻿@model IEnumerable<PAM.Model.StateEntity>
+
+@{
+    ViewBag.Title = "All States";
+}
+
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">@ViewBag.Title</li>
+</ol>
+
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-table"></i>
+            @Html.ActionLink("Create New", "Create")
+        </div>
+            <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable"  cellspacing="0">
+                <tr>
+                    <th>
+                        @Html.Encode("State Name")
+                    </th>
+
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StateName)
+                        </td>
+
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.StateId }) 
+
+                        </td>
+                    </tr>
+                }
+
+            </table>
+                </div>
+           
+        </div>

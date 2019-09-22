@@ -1,0 +1,68 @@
+﻿@model IEnumerable<PAM.Model.AddressEntity>
+
+@{
+    ViewBag.Title = "Search Address";
+}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">@ViewBag.Title</li>
+</ol>
+
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        @Html.ActionLink("Create New", "Create")
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+
+            <table id="AdressDetails" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Address</th>
+                        <th>StateName</th>
+                        <th>Edit</th>
+
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+        </div>
+        </div>
+    </div>
+   
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
+    <script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            //Call AddressDetails jsonResult Method
+            $.getJSON("/Address/GetAddresses",
+            function (json) {
+                var tr;
+
+                //Append each row to html table
+                for (var i = 0; i < json.length; i++) {
+                    tr = $('<tr/>');
+                    tr.append("<td>" + json[i].FullAddress + "</td>");
+                    tr.append("<td>" + json[i].StateName + "</td>");
+                    tr.append("<td><a href=/Address/Edit/" + json[i].Id + ">Edit</a></td>");
+                    $('table').append(tr);
+
+                }
+                $('#AdressDetails').DataTable();
+                $("#AdressDetails").removeAttr('class')
+                $("#AdressDetails").addClass('table')
+
+            });
+
+        });
+
+    </script>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+

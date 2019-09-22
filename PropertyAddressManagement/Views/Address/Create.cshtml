@@ -1,0 +1,130 @@
+﻿@model PAM.Model.AddressEntity
+
+@{
+    ViewBag.Title = "Create Address";
+}
+
+ <ol class="breadcrumb">
+    <li class="breadcrumb-item">@ViewBag.Title</li>
+</ol>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.Label("State", "Select State", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.DropDownList("StateId", (IEnumerable<SelectListItem>)ViewBag.State, "....Select...", new { @id = "State", @class = "drop form-control" })
+                @Html.ValidationMessageFor(m => m.StateId, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => m.StateId)
+
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Suburb", "Select Suburb", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.DropDownList("SuburbId", (IEnumerable<SelectListItem>)ViewBag.Suburb, "....Select...", new {@id="Suburb", @class = "drop form-control" })
+                @Html.ValidationMessageFor(m => m.SuburbId, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => m.SuburbId)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StreetNumber , "Street Number", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.StreetNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.StreetNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Street , "Street", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Street, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.PostCode , "PostCode", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PostCode, new { htmlAttributes = new { @class = "form-control" , @type = "number" ,maxlength = 6} })
+                @Html.ValidationMessageFor(model => model.PostCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.UnitNumber , "Unit Number", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UnitNumber, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.PropertyType, "Property Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+               @Html.DropDownListFor(model => model.PropertyType, new List<SelectListItem>
+     { new SelectListItem { Text = "Apartment", Value = "1", Selected=true},
+       new SelectListItem { Text = "House", Value = "2"},
+       new SelectListItem { Text = "Unit", Value = "3"}
+       },null, new { @class = "drop form-control" })
+            
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.StreetType , "StreetType", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.StreetType, new { htmlAttributes = new { @class = "form-control" } })
+               
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List of Addresss", "ListAll")
+</div>
+
+   <script type="text/javascript">
+    $(document).ready(function () {
+        //Dropdownlist Selectedchange event
+        $("#State").change(function () {
+            $("#Suburb").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSuburb")',
+                dataType: 'json',
+                data: { id: $("#State").val() },
+                success: function (suburbs) {
+                     $.each(suburbs, function (i, suburb) {
+                        $("#Suburb").append('<option value="'
++ suburb.Value + '">'
++ suburb.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve data.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>   
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
